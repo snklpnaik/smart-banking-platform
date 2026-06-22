@@ -2,9 +2,13 @@ package com.smartbank.auth.service.impl;
 
 import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.smartbank.auth.dto.LoginRequest;
+import com.smartbank.auth.dto.ProfileResponse;
 import com.smartbank.auth.dto.RegisterRequest;
 import com.smartbank.auth.entity.User;
 import com.smartbank.auth.repository.UserRepository;
@@ -18,9 +22,12 @@ public class AuthServiceImpl implements AuthService{
 	
 	private final JwUtil jwUtil;
 	
-	public AuthServiceImpl(UserRepository userRepository, JwUtil jwUtil) {
+	private final PasswordEncoder passwordEncoder;
+	
+	public AuthServiceImpl(UserRepository userRepository, JwUtil jwUtil, PasswordEncoder passwordEncoder) {
 		this.userRepository=userRepository;
 		this.jwUtil=jwUtil;
+		this.passwordEncoder=passwordEncoder;
 	}
 	
 	@Override
@@ -34,7 +41,7 @@ public class AuthServiceImpl implements AuthService{
 		
 		user.setUserName(request.getUserName());
 		user.setEmail(request.getEmail());
-		user.setPassword(request.getPassword());
+		user.setPassword(passwordEncoder.encode(request.getPassword()));
 		userRepository.save(user);
 		
 		return "User Registered Successfully";
@@ -51,10 +58,26 @@ public class AuthServiceImpl implements AuthService{
 		
 		User user=userOpt.get();
 		
-		if(user.getPassword().equals(request.getPassword())) {
+		
+		
+		if(passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 			return jwUtil.generateToken(request.getEmail());
 		}
 		
 		return "Invalid Password";
+	}
+
+	@Override
+	public ProfileResponse getProfile() {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		String email = authentication.getName();
+		User user = userRepository.findByEmail(email)
+									.orElseThrow(() -> new RuntimeException("User Not Found"));
+		
+		return new ProfileResponse(
+				user.getUserName(),
+				user.getEmail());
 	}
 }

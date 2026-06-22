@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smartbank.auth.dto.LoginRequest;
+import com.smartbank.auth.dto.ProfileResponse;
 import com.smartbank.auth.dto.RegisterRequest;
 import com.smartbank.auth.service.AuthService;
 
@@ -30,7 +31,7 @@ public class AuthController {
 	}
 		
 	@GetMapping("/profile")
-	public String profile() {
-		return "Welcome to Profile API";
+	public ProfileResponse getProfile() {
+		return authService.getProfile();
 	}
 }
