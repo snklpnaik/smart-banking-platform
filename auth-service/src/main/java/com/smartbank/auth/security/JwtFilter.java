@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,9 +20,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtFilter extends OncePerRequestFilter{
 	
 	private final JwUtil jwUtil;
+	private final CustomUserDetailsService customUserDetailsService;
 	
-	public JwtFilter(JwUtil jwUtil) {
+	public JwtFilter(JwUtil jwUtil, CustomUserDetailsService customUserDetailsService) {
 		this.jwUtil=jwUtil;
+		this.customUserDetailsService=customUserDetailsService;
 	}
 
 	@Override
@@ -40,13 +43,14 @@ public class JwtFilter extends OncePerRequestFilter{
 			
 			try {
 				String email = jwUtil.extractEmail(token);
+				UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
 				
 				System.out.println("Authenticated User : "+email);
 				
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-						email,
+						userDetails,
 						null, 
-						Collections.emptyList());
+						userDetails.getAuthorities());
 				
 				SecurityContextHolder.getContext()
 									.setAuthentication(authentication);
@@ -54,6 +58,12 @@ public class JwtFilter extends OncePerRequestFilter{
 				System.out.println("--------AUTHENTICATED---------");
 			} catch(Exception e) {
 				System.out.println("Invalid Token");
+				
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				response.setContentType("application/json");
+				response.getWriter().write(
+						"{\"message\":\"Invalid Token\"}");
+				return;
 			}
 		}
 		

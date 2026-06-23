@@ -1,4 +1,6 @@
 package com.smartbank.auth.entity;
+import com.smartbank.auth.constants.Role;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -8,6 +10,10 @@ public class User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(nullable=false)
+	private Role role;
 	
 	@Column(nullable=false, unique=true)
 	private String userName;
@@ -41,5 +47,11 @@ public class User {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public Role getRole() {
+		return role;
+	}
+	public void setRole(Role role) {
+		this.role = role;
 	}
 }

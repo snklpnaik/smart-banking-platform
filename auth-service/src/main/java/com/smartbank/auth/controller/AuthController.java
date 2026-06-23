@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smartbank.auth.dto.LoginRequest;
+import com.smartbank.auth.dto.LoginResponse;
 import com.smartbank.auth.dto.ProfileResponse;
 import com.smartbank.auth.dto.RegisterRequest;
 import com.smartbank.auth.service.AuthService;
@@ -26,12 +27,17 @@ public class AuthController {
 	}
 	
 	@PostMapping("/login")
-	public String login(@RequestBody LoginRequest request) {
+	public LoginResponse login(@RequestBody LoginRequest request) {
 		return authService.login(request);
 	}
 		
 	@GetMapping("/profile")
 	public ProfileResponse getProfile() {
 		return authService.getProfile();
+	}
+	
+	@GetMapping("/admin")
+	public String admin() {
+		return "Admin Endpoint";
 	}
 }
