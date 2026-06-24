@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 import com.smartbank.account.dto.CreateAccountRequest;
+import com.smartbank.account.dto.UpdateBalanceRequest;
 import com.smartbank.account.entity.Account;
 import com.smartbank.account.service.AccountService;
 
@@ -34,6 +35,11 @@ public class AccountController {
 	@GetMapping("/user/{userId}")
 	public List<Account> getAccountByUser(@PathVariable Long userId){
 		return accountService.getAccountByUserId(userId);
+	}
+	
+	@PutMapping("/balance")
+	public Account updateBalance(@Valid @RequestBody UpdateBalanceRequest request) {
+		return accountService.updateBalance(request);
 	}
 	
 }

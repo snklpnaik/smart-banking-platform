@@ -3,6 +3,7 @@ package com.smartbank.account.service;
 import java.util.List;
 
 import com.smartbank.account.dto.CreateAccountRequest;
+import com.smartbank.account.dto.UpdateBalanceRequest;
 import com.smartbank.account.entity.Account;
 
 public interface AccountService {
@@ -12,4 +13,6 @@ public interface AccountService {
 	Account getAccountByAccountNumber(String accountNumber);
 	
 	List<Account> getAccountByUserId(Long userId);
+	
+	Account updateBalance(UpdateBalanceRequest request);
 }

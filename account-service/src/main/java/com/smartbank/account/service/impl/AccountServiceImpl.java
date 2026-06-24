@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.smartbank.account.constants.AccountStatus;
 import com.smartbank.account.dto.CreateAccountRequest;
+import com.smartbank.account.dto.UpdateBalanceRequest;
 import com.smartbank.account.entity.Account;
 import com.smartbank.account.exception.AccountNotFoundException;
 import com.smartbank.account.repository.AccountRepository;
@@ -52,5 +53,17 @@ public class AccountServiceImpl implements AccountService{
 	public List<Account> getAccountByUserId(Long userId) {
 
 		return accountRepository.findByUserId(userId);
+	}
+
+	@Override
+	public Account updateBalance(UpdateBalanceRequest request) {
+		
+		Account account = accountRepository.findByAccountNumber(
+							request.getAccountNumber())
+							.orElseThrow(() -> new AccountNotFoundException("Account Not Found"));
+		
+		account.setBalance(request.getBalance());
+		
+		return accountRepository.save(account);
 	}
 }
