@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.smartbank.account.constants.AccountStatus;
 import com.smartbank.account.dto.CreateAccountRequest;
 import com.smartbank.account.entity.Account;
+import com.smartbank.account.exception.AccountNotFoundException;
 import com.smartbank.account.repository.AccountRepository;
 import com.smartbank.account.service.AccountService;
 import com.smartbank.account.util.AccountNumberGenerator;
@@ -44,7 +45,7 @@ public class AccountServiceImpl implements AccountService{
 	public Account getAccountByAccountNumber(String accountNumber) {
 		
 		return accountRepository.findByAccountNumber(accountNumber)
-				.orElseThrow(() -> new RuntimeException("Account Not Found"));
+				.orElseThrow(() -> new AccountNotFoundException("Account Not Found: " + accountNumber));
 	}
 
 	@Override

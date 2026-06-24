@@ -8,6 +8,8 @@ import com.smartbank.account.dto.CreateAccountRequest;
 import com.smartbank.account.entity.Account;
 import com.smartbank.account.service.AccountService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
@@ -20,7 +22,7 @@ public class AccountController {
 	
 	
 	@PostMapping
-	public Account createAccpunt(@RequestBody CreateAccountRequest request) {
+	public Account createAccount(@Valid @RequestBody CreateAccountRequest request) {
 		return accountService.createAccount(request);
 	}
 	

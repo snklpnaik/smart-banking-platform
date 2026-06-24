@@ -7,6 +7,7 @@ import com.smartbank.account.constants.AccountStatus;
 import com.smartbank.account.constants.AccountType;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name="accounts")
@@ -23,9 +24,11 @@ public class Account {
 	@Column(nullable = false, unique = true)
 	private String accountNumber;
 	
+	@NotNull(message="UserId is Required")
 	@Column(nullable = false)
 	private Long userId;
 	
+	@NotNull(message="Account Type is Required")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable=false)
 	private AccountType accountType;
