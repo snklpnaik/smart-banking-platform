@@ -15,7 +15,6 @@ import com.smartbank.transaction.dto.WithdrawRequest;
 import com.smartbank.transaction.entity.Transaction;
 import com.smartbank.transaction.service.TransactionService;
 
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/transactions")

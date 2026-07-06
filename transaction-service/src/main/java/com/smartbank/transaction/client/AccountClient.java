@@ -10,8 +10,7 @@ import com.smartbank.transaction.dto.UpdateBalanceRequest;
 import com.smartbank.transaction.dto.client.AccountResponse;
 
 @FeignClient(
-		name="account-service",
-		url="http://localhost:8082")
+		name="account-service")
 public interface AccountClient {
 	
 	@GetMapping("/accounts/{accountNumber}")
