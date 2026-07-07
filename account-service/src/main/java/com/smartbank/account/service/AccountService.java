@@ -15,4 +15,6 @@ public interface AccountService {
 	List<Account> getAccountByUserId(Long userId);
 	
 	Account updateBalance(UpdateBalanceRequest request);
+	
+	String test(String email);
 }

@@ -40,7 +40,7 @@ public class SecurityConfig {
 			.csrf(csrf -> csrf.disable())
 			.authorizeHttpRequests(auth -> auth
 						.requestMatchers(SecurityConstants.PUBLIC_URLS).permitAll()
-						.requestMatchers("/api/auth/admin").hasRole(Role.ADMIN.name())
+						.requestMatchers("/auth/admin").hasRole(Role.ADMIN.name())
 						.anyRequest().authenticated())
 			.addFilterBefore(jwFilter, UsernamePasswordAuthenticationFilter.class);
 		

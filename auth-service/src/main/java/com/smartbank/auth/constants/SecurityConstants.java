@@ -6,8 +6,9 @@ public class SecurityConstants {
 	}
 	
 	public static final String[] PUBLIC_URLS = {
-			"/api/auth/register", 
-			"/api/auth/login"
+			"/auth/register", 
+			"/auth/login",
+			"/auth/user/**"
 	};
 	
 	public static final String TOKEN_PREFIX = "Bearer ";

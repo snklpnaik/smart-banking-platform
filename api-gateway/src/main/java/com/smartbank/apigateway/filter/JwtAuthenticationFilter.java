@@ -2,6 +2,7 @@ package com.smartbank.apigateway.filter;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -58,7 +59,16 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered{
 			return exchange.getResponse().setComplete();
 		}
 		
+		String email = jwtUtil.extractEmail(token);
+		ServerHttpRequest request = exchange.getRequest()
+											.mutate()
+											.header("X-Authenticated-User", email)
+											.build();
+		ServerWebExchange modifiedExchange = exchange.mutate()
+													.request(request)
+													.build();
 		
-		return chain.filter(exchange);
+		
+		return chain.filter(modifiedExchange);
 	}
 }

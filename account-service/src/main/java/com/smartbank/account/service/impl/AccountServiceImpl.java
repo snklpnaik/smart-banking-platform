@@ -4,11 +4,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.smartbank.account.client.UserClient;
 import com.smartbank.account.constants.AccountStatus;
 import com.smartbank.account.dto.CreateAccountRequest;
 import com.smartbank.account.dto.UpdateBalanceRequest;
+import com.smartbank.account.dto.UserResponseDto;
 import com.smartbank.account.entity.Account;
 import com.smartbank.account.exception.AccountNotFoundException;
 import com.smartbank.account.repository.AccountRepository;
@@ -22,9 +25,12 @@ public class AccountServiceImpl implements AccountService{
 	
 	private final AccountNumberGenerator accountNumberGenerator;
 	
-	public AccountServiceImpl(AccountRepository accountRepository, AccountNumberGenerator accountNumberGenerator) {
+	private final UserClient userClient;
+	
+	public AccountServiceImpl(AccountRepository accountRepository, AccountNumberGenerator accountNumberGenerator, UserClient userClient) {
 		this.accountRepository=accountRepository;
 		this.accountNumberGenerator=accountNumberGenerator;
+		this.userClient=userClient;
 	}
 	
 	@Override
@@ -65,5 +71,13 @@ public class AccountServiceImpl implements AccountService{
 		account.setBalance(request.getBalance());
 		
 		return accountRepository.save(account);
+	}
+
+	@Override
+	public String test(String email) {
+		
+		UserResponseDto user= userClient.getUserByEmail(email).getBody();
+		
+		return "User Id : " + user.getId() + ", Username : " + user.getUsername() + ", Email : " + user.getEmail();
 	}
 }

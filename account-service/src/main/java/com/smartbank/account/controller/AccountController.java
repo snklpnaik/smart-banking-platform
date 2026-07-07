@@ -42,4 +42,9 @@ public class AccountController {
 		return accountService.updateBalance(request);
 	}
 	
+	@GetMapping("/test")
+	public String test(@RequestHeader("X-Authenticated-User") String email) {
+		return accountService.test(email);
+	}
+	
 }

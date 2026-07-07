@@ -1,6 +1,8 @@
 package com.smartbank.auth.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,10 +12,11 @@ import com.smartbank.auth.dto.LoginRequest;
 import com.smartbank.auth.dto.LoginResponse;
 import com.smartbank.auth.dto.ProfileResponse;
 import com.smartbank.auth.dto.RegisterRequest;
+import com.smartbank.auth.dto.UserResponseDto;
 import com.smartbank.auth.service.AuthService;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 	private final AuthService authService;
 	
@@ -39,5 +42,10 @@ public class AuthController {
 	@GetMapping("/admin")
 	public String admin() {
 		return "Admin Endpoint";
+	}
+	
+	@GetMapping("/user/email/{email}")
+	public ResponseEntity<UserResponseDto> getUserByEmail(@PathVariable String email){
+		return ResponseEntity.ok(authService.getUserByEmail(email));
 	}
 }

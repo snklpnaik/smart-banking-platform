@@ -11,6 +11,7 @@ import com.smartbank.auth.dto.LoginRequest;
 import com.smartbank.auth.dto.LoginResponse;
 import com.smartbank.auth.dto.ProfileResponse;
 import com.smartbank.auth.dto.RegisterRequest;
+import com.smartbank.auth.dto.UserResponseDto;
 import com.smartbank.auth.entity.User;
 import com.smartbank.auth.exception.InvalidCredentialsException;
 import com.smartbank.auth.exception.UserNotFoundException;
@@ -75,6 +76,18 @@ public class AuthServiceImpl implements AuthService{
 									.orElseThrow(() -> new UserNotFoundException("User Not Found"));
 		
 		return new ProfileResponse(
+				user.getUserName(),
+				user.getEmail());
+	}
+
+	@Override
+	public UserResponseDto getUserByEmail(String email) {
+		
+		User user = userRepository.findByEmail(email)
+									.orElseThrow(() -> new RuntimeException("User Not Found"));
+		
+		return new UserResponseDto(
+				user.getId(),
 				user.getUserName(),
 				user.getEmail());
 	}
