@@ -6,6 +6,7 @@ import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Component;
 
+import com.smartbank.auth.constants.Role;
 import com.smartbank.auth.constants.SecurityConstants;
 
 import io.jsonwebtoken.Jwts;
@@ -16,9 +17,11 @@ public class JwUtil {
 
 	private final SecretKey key = Keys.hmacShaKeyFor("ThisSecretKeyIsBySankalpThisSecretKeyIsBySankalp".getBytes());
 	
-	public String generateToken(String email) {
+	public String generateToken(Long userId, String email, Role role) {
 		return Jwts.builder()
 				.setSubject(email)
+				.claim("userId", userId)
+				.claim("role", role.name())
 				.setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.JWT_EXPIRATION))
 				.signWith(key)

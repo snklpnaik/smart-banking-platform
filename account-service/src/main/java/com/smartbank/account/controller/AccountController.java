@@ -2,8 +2,10 @@ package com.smartbank.account.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.smartbank.account.dto.BalanceUpdateRequest;
 import com.smartbank.account.dto.CreateAccountRequest;
 import com.smartbank.account.dto.UpdateBalanceRequest;
 import com.smartbank.account.entity.Account;
@@ -42,9 +44,23 @@ public class AccountController {
 		return accountService.updateBalance(request);
 	}
 	
+	@PutMapping("/debit")
+	public ResponseEntity<Account> debitAccount(@RequestBody BalanceUpdateRequest request){
+		
+		return ResponseEntity.ok(accountService.debitAccount(request));
+	}
+	
+	@PutMapping("/credit")
+	public ResponseEntity<Account> creditAccount(@RequestBody BalanceUpdateRequest request){
+		
+		return ResponseEntity.ok(accountService.creditAccount(request));
+	}
+	
 	@GetMapping("/test")
-	public String test(@RequestHeader("X-Authenticated-User") String email) {
-		return accountService.test(email);
+	public String test(@RequestHeader("X-Authenticated-UserId") Long id,
+			@RequestHeader("X-Authenticated-Email") String email, @RequestHeader("X-Authenticated-Role") String role) {
+		System.out.println(id+email+role);
+		return accountService.test(id);
 	}
 	
 }

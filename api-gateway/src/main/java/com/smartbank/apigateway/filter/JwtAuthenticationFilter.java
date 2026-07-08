@@ -59,14 +59,23 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered{
 			return exchange.getResponse().setComplete();
 		}
 		
+		Long userId = jwtUtil.extractUserId(token);
 		String email = jwtUtil.extractEmail(token);
+		String role = jwtUtil.extractRole(token);
 		ServerHttpRequest request = exchange.getRequest()
 											.mutate()
-											.header("X-Authenticated-User", email)
+											.header("X-Authenticated-Email", email)
+											.header("X-Authenticated-UserId", String.valueOf(userId))
+											.header("X-Authenticated-Role", role)
 											.build();
 		ServerWebExchange modifiedExchange = exchange.mutate()
 													.request(request)
 													.build();
+		
+		if(path.equals("/accounts") &&  exchange.getRequest().getMethod().name().equals("POST") && !"ADMIN".equals(role)) {
+			exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+			return exchange.getResponse().setComplete();
+		}
 		
 		
 		return chain.filter(modifiedExchange);

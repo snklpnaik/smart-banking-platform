@@ -36,11 +36,11 @@ public class TransactionServiceImpl implements TransactionService{
 
 			return null;
 		}
-		BigDecimal newBalance = account.getBalance().add(request.getAmount());
+		BigDecimal newBalance = account.getAmount().add(request.getAmount());
 		
 		UpdateBalanceRequest updateRequest = new UpdateBalanceRequest();
 		updateRequest.setAccountNumber(account.getAccountNumber());
-		updateRequest.setBalance(newBalance);
+		updateRequest.setAmount(newBalance);
 		
 		accountClient.updateBalance(updateRequest);
 		
@@ -63,17 +63,17 @@ public class TransactionServiceImpl implements TransactionService{
 
 			return null;
 		}
-		if(account.getBalance().compareTo(request.getAmount()) < 0) { 
+		if(account.getAmount().compareTo(request.getAmount()) < 0) { 
 			
 			throw new RuntimeException("Insufficient Balance");
 			
 		}
-		BigDecimal newBalance = account.getBalance().subtract(request.getAmount());
+		BigDecimal newBalance = account.getAmount().subtract(request.getAmount());
 		
 		UpdateBalanceRequest updateRequest = new UpdateBalanceRequest();
 		
 		updateRequest.setAccountNumber(account.getAccountNumber());
-		updateRequest.setBalance(newBalance);
+		updateRequest.setAmount(newBalance);
 		
 		accountClient.updateBalance(updateRequest);
 		
@@ -90,7 +90,7 @@ public class TransactionServiceImpl implements TransactionService{
 	}
 
 	@Override
-	public Transaction transfer(TransferRequest request) {
+	public Transaction transfer(Long userId, TransferRequest request) {
 		// TODO Auto-generated method stub
 		
 		if(request.getFromAccountNumber().equals(request.getToAccountNumber())) {
@@ -98,31 +98,37 @@ public class TransactionServiceImpl implements TransactionService{
 		}
 		
 		AccountResponse sender = accountClient.getAccountByNumber(request.getFromAccountNumber());
-		AccountResponse receiver = accountClient.getAccountByNumber(request.getToAccountNumber());
-		
-		
-		if(sender.getBalance().compareTo(request.getAmount())<0) {
-			throw new RuntimeException("Insufficient Balance");
+		if(!sender.getUserId().equals(userId)) {
+			throw new RuntimeException("You are not Authorized to use this Account");
 		}
 		
-		BigDecimal senderBalance = sender.getBalance().subtract(request.getAmount());
 		
-		BigDecimal recBalance = receiver.getBalance().add(request.getAmount());
+		AccountResponse receiver = accountClient.getAccountByNumber(request.getToAccountNumber());
+		
+//		if(sender.getBalance().compareTo(request.getAmount())<0) {
+//			throw new RuntimeException("Insufficient Balance");
+//		}
+//		
+//		BigDecimal senderBalance = sender.getBalance().subtract(request.getAmount());
+//		
+//		BigDecimal recBalance = receiver.getBalance().add(request.getAmount());
 		
 		UpdateBalanceRequest senderRequest = new UpdateBalanceRequest();
 		senderRequest.setAccountNumber(sender.getAccountNumber());
-		senderRequest.setBalance(senderBalance);
-		accountClient.updateBalance(senderRequest);
+		senderRequest.setAmount(request.getAmount());
+//		accountClient.updateBalance(senderRequest);
+		accountClient.debitAccount(senderRequest);
 		
 		UpdateBalanceRequest receiverRequest = new UpdateBalanceRequest();
 		receiverRequest.setAccountNumber(receiver.getAccountNumber());
-		receiverRequest.setBalance(recBalance);
-		accountClient.updateBalance(receiverRequest);
+		receiverRequest.setAmount(request.getAmount());
+//		accountClient.updateBalance(receiverRequest);
+		accountClient.creditAccount(receiverRequest);
 		
 		
 		//save transaction
 		Transaction transaction = new Transaction();
-		transaction.setFromAccountNumber(receiver.getAccountNumber());
+		transaction.setFromAccountNumber(sender.getAccountNumber());
 		transaction.setToAccountNumber(receiver.getAccountNumber());
 		transaction.setAmount(request.getAmount());
 		transaction.setTransactionType(TransactionType.TRANSFER);

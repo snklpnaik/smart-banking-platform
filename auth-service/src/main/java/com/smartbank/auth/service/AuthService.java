@@ -13,5 +13,5 @@ public interface AuthService {
 	
 	ProfileResponse getProfile();
 	
-	UserResponseDto getUserByEmail(String email);
+	UserResponseDto getUserById(Long id);
 }

@@ -11,9 +11,9 @@ public class UpdateBalanceRequest {
 	@NotBlank(message="Account Number is Required")
 	private String accountNumber;
 	
-	@NotNull(message="Balance is required")
-	@PositiveOrZero(message="Balance cannot be negative")
-	private BigDecimal balance;
+	@NotNull(message="Amount is required")
+	@PositiveOrZero(message="Amount cannot be negative")
+	private BigDecimal amount;
 	
 	public String getAccountNumber() {
 		return accountNumber;
@@ -23,12 +23,12 @@ public class UpdateBalanceRequest {
 		this.accountNumber=accountNumber;
 	}
 
-	public BigDecimal getBalance() {
-		return balance;
+	public BigDecimal getAmount() {
+		return amount;
 	}
 
-	public void setBalance(BigDecimal balance) {
-		this.balance = balance;
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
 	
 	

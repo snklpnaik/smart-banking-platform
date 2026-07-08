@@ -13,7 +13,7 @@ public interface TransactionService {
 	
 	Transaction withdraw(WithdrawRequest request);
 	
-	Transaction transfer(TransferRequest request);
+	Transaction transfer(Long userId, TransferRequest request);
 	
 	List<Transaction> getTransactionHistory(String accountNumber);
 }

@@ -10,6 +10,6 @@ import com.smartbank.account.dto.UserResponseDto;
 
 @FeignClient(name = "AUTH-SERVICE")
 public interface UserClient {
-	@GetMapping("/auth/user/email/{email}")
-	public ResponseEntity<UserResponseDto> getUserByEmail(@PathVariable String email);
+	@GetMapping("/auth/user/id/{id}")
+	public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id);
 }

@@ -59,7 +59,7 @@ public class AuthServiceImpl implements AuthService{
 		User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UserNotFoundException("User Not Found, Register First!"));
 		
 		if(passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-			String token = jwUtil.generateToken(request.getEmail());
+			String token = jwUtil.generateToken(user.getId(), request.getEmail(), user.getRole());
 			return new LoginResponse(token);
 		}
 		
@@ -81,9 +81,9 @@ public class AuthServiceImpl implements AuthService{
 	}
 
 	@Override
-	public UserResponseDto getUserByEmail(String email) {
+	public UserResponseDto getUserById(Long id) {
 		
-		User user = userRepository.findByEmail(email)
+		User user = userRepository.findById(id)
 									.orElseThrow(() -> new RuntimeException("User Not Found"));
 		
 		return new UserResponseDto(

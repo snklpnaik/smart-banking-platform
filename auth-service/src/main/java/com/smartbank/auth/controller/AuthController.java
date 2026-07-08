@@ -44,8 +44,8 @@ public class AuthController {
 		return "Admin Endpoint";
 	}
 	
-	@GetMapping("/user/email/{email}")
-	public ResponseEntity<UserResponseDto> getUserByEmail(@PathVariable String email){
-		return ResponseEntity.ok(authService.getUserByEmail(email));
+	@GetMapping("/user/id/{id}")
+	public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id){
+		return ResponseEntity.ok(authService.getUserById(id));
 	}
 }
