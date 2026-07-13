@@ -40,7 +40,7 @@ public class TransactionController {
 	@PostMapping("/transfer")
 	public ResponseEntity<Transaction> transfer(@RequestHeader("X-Authenticated-UserId") Long userId,
 												@RequestBody TransferRequest request) {
-		return ResponseEntity.ok(transactionService.transfer(request));
+		return ResponseEntity.ok(transactionService.transfer(userId, request));
 	}
 	
 	@GetMapping("/{accountNumber}")

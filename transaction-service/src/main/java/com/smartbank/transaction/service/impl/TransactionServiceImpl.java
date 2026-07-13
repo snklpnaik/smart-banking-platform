@@ -15,6 +15,7 @@ import com.smartbank.transaction.dto.UpdateBalanceRequest;
 import com.smartbank.transaction.dto.WithdrawRequest;
 import com.smartbank.transaction.dto.client.AccountResponse;
 import com.smartbank.transaction.entity.Transaction;
+import com.smartbank.transaction.kafka.TransactionProducer;
 import com.smartbank.transaction.repository.TransactionRepository;
 import com.smartbank.transaction.service.TransactionService;
 
@@ -22,10 +23,12 @@ import com.smartbank.transaction.service.TransactionService;
 public class TransactionServiceImpl implements TransactionService{
 	private final TransactionRepository transactionRepository;
 	private final AccountClient accountClient;
+	private final TransactionProducer transactionProducer;
 	
-	public TransactionServiceImpl(TransactionRepository transactionRepository, AccountClient accountClient) {
+	public TransactionServiceImpl(TransactionRepository transactionRepository, AccountClient accountClient, TransactionProducer transactionProducer) {
 		this.transactionRepository=transactionRepository;
 		this.accountClient=accountClient;
+		this.transactionProducer=transactionProducer;
 	}
 
 	@Override
@@ -36,11 +39,11 @@ public class TransactionServiceImpl implements TransactionService{
 
 			return null;
 		}
-		BigDecimal newBalance = account.getAmount().add(request.getAmount());
+		BigDecimal newBalance = account.getBalance().add(request.getAmount());
 		
 		UpdateBalanceRequest updateRequest = new UpdateBalanceRequest();
 		updateRequest.setAccountNumber(account.getAccountNumber());
-		updateRequest.setAmount(newBalance);
+		updateRequest.setBalance(newBalance);
 		
 		accountClient.updateBalance(updateRequest);
 		
@@ -52,7 +55,14 @@ public class TransactionServiceImpl implements TransactionService{
 		transaction.setTransactionStatus(TransactionStatus.SUCCESS);
 		transaction.setCreatedAt(LocalDateTime.now());
 		
-		return transactionRepository.save(transaction);
+		Transaction savedTransaction = transactionRepository.save(transaction);
+		
+		transactionProducer.sendTransactionEvent(
+				"Deposit Successful: " + 
+						savedTransaction.getToAccountNumber() + 
+						" Amount: " + savedTransaction.getAmount()
+				);
+		return savedTransaction;
 	}
 
 	@Override
@@ -63,17 +73,19 @@ public class TransactionServiceImpl implements TransactionService{
 
 			return null;
 		}
-		if(account.getAmount().compareTo(request.getAmount()) < 0) { 
+		System.out.println(account+"::requestamount");
+		
+		if(account.getBalance()!=null && request.getAmount()!=null && account.getBalance().compareTo(request.getAmount()) < 0) { 
 			
 			throw new RuntimeException("Insufficient Balance");
 			
 		}
-		BigDecimal newBalance = account.getAmount().subtract(request.getAmount());
+		BigDecimal newBalance = account.getBalance().subtract(request.getAmount());
 		
 		UpdateBalanceRequest updateRequest = new UpdateBalanceRequest();
 		
 		updateRequest.setAccountNumber(account.getAccountNumber());
-		updateRequest.setAmount(newBalance);
+		updateRequest.setBalance(newBalance);
 		
 		accountClient.updateBalance(updateRequest);
 		
@@ -86,7 +98,15 @@ public class TransactionServiceImpl implements TransactionService{
 		transaction.setTransactionStatus(TransactionStatus.SUCCESS);
 		transaction.setCreatedAt(LocalDateTime.now());
 		
-		return transactionRepository.save(transaction);
+		Transaction savedTransaction = transactionRepository.save(transaction);
+		
+		transactionProducer.sendTransactionEvent(
+				"Withdraw Successful: " + 
+						savedTransaction.getFromAccountNumber() + 
+						" Amount: " + savedTransaction.getAmount()
+				);
+		
+		return savedTransaction;
 	}
 
 	@Override
@@ -115,13 +135,13 @@ public class TransactionServiceImpl implements TransactionService{
 		
 		UpdateBalanceRequest senderRequest = new UpdateBalanceRequest();
 		senderRequest.setAccountNumber(sender.getAccountNumber());
-		senderRequest.setAmount(request.getAmount());
+		senderRequest.setBalance(request.getAmount());
 //		accountClient.updateBalance(senderRequest);
 		accountClient.debitAccount(senderRequest);
 		
 		UpdateBalanceRequest receiverRequest = new UpdateBalanceRequest();
 		receiverRequest.setAccountNumber(receiver.getAccountNumber());
-		receiverRequest.setAmount(request.getAmount());
+		receiverRequest.setBalance(request.getAmount());
 //		accountClient.updateBalance(receiverRequest);
 		accountClient.creditAccount(receiverRequest);
 		
@@ -135,7 +155,15 @@ public class TransactionServiceImpl implements TransactionService{
 		transaction.setTransactionStatus(TransactionStatus.SUCCESS);
 		transaction.setCreatedAt(LocalDateTime.now());
 		
-		return transactionRepository.save(transaction);
+		Transaction savedTransaction = transactionRepository.save(transaction);
+		
+		transactionProducer.sendTransactionEvent(
+				"Transfer Successful: " + 
+						savedTransaction.getFromAccountNumber() + " -> " + savedTransaction.getToAccountNumber() + 
+						" Amount: " + savedTransaction.getAmount()
+				);
+		
+		return savedTransaction;
 	}
 
 	@Override

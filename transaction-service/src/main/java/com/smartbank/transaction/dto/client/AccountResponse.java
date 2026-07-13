@@ -6,7 +6,7 @@ public class AccountResponse {
 	private Long id;
 	private String accountNumber;
 	private Long userId;
-	private BigDecimal amount;
+	private BigDecimal balance;
 	private String accountType;
 	private String status;
 	public Long getId() {
@@ -27,11 +27,11 @@ public class AccountResponse {
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-	public BigDecimal getAmount() {
-		return amount;
+	public BigDecimal getBalance() {
+		return balance;
 	}
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
+	public void setAmount(BigDecimal balance) {
+		this.balance = balance;
 	}
 	public String getAccountType() {
 		return accountType;
