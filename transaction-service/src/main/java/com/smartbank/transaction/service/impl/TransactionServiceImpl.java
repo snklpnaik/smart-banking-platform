@@ -10,6 +10,7 @@ import com.smartbank.transaction.client.AccountClient;
 import com.smartbank.transaction.constants.TransactionStatus;
 import com.smartbank.transaction.constants.TransactionType;
 import com.smartbank.transaction.dto.DepositRequest;
+import com.smartbank.transaction.dto.TransactionEvent;
 import com.smartbank.transaction.dto.TransferRequest;
 import com.smartbank.transaction.dto.UpdateBalanceRequest;
 import com.smartbank.transaction.dto.WithdrawRequest;
@@ -99,12 +100,15 @@ public class TransactionServiceImpl implements TransactionService{
 		transaction.setCreatedAt(LocalDateTime.now());
 		
 		Transaction savedTransaction = transactionRepository.save(transaction);
+//		
+//		transactionProducer.sendTransactionEvent(
+//				"Withdraw Successful: " + 
+//						savedTransaction.getFromAccountNumber() + 
+//						" Amount: " + savedTransaction.getAmount()
+//				);
 		
-		transactionProducer.sendTransactionEvent(
-				"Withdraw Successful: " + 
-						savedTransaction.getFromAccountNumber() + 
-						" Amount: " + savedTransaction.getAmount()
-				);
+		TransactionEvent event = new TransactionEvent();
+		event.
 		
 		return savedTransaction;
 	}
