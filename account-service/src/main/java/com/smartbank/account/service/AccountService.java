@@ -19,7 +19,7 @@ public interface AccountService {
 	
 	String test(Long id);
 
-	Account debitAccount(BalanceUpdateRequest request);
+	Account debitAccount(UpdateBalanceRequest request);
 	
-	Account creditAccount(BalanceUpdateRequest request);
+	Account creditAccount(UpdateBalanceRequest request);
 }

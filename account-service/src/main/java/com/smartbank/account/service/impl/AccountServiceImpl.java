@@ -89,27 +89,29 @@ public class AccountServiceImpl implements AccountService{
 	}
 
 	@Override
-	public Account debitAccount(BalanceUpdateRequest request) {
+	public Account debitAccount(UpdateBalanceRequest request) {
 		
 		Account account = accountRepository.findByAccountNumber(request.getAccountNumber())
 								.orElseThrow(() -> new AccountNotFoundException("Account Not Found"));
-		
-		if(account.getBalance().compareTo(request.getAmount())<0) {
+		if(account.getBalance()==null)throw new RuntimeException("account balance empty");
+		else if(request.getBalance()==null)throw new RuntimeException("request balance empty");
+		else
+			{if(account.getBalance().compareTo(request.getBalance())<0) {
 			throw new RuntimeException("Insufficient Balance");
-		}
+		}}
 		
-		account.setBalance(account.getBalance().subtract(request.getAmount()));
+		account.setBalance(account.getBalance().subtract(request.getBalance()));
 		
 		return accountRepository.save(account);
 	}
 
 	@Override
-	public Account creditAccount(BalanceUpdateRequest request) {
+	public Account creditAccount(UpdateBalanceRequest request) {
 		
 		Account account = accountRepository.findByAccountNumber(request.getAccountNumber())
 								.orElseThrow(() -> new AccountNotFoundException("Account Not Found"));
 		
-		account.setBalance(account.getBalance().add(request.getAmount()));
+		account.setBalance(account.getBalance().add(request.getBalance()));
 		
 		return accountRepository.save(account);
 	}

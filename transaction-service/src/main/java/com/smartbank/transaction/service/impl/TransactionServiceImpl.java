@@ -58,11 +58,22 @@ public class TransactionServiceImpl implements TransactionService{
 		
 		Transaction savedTransaction = transactionRepository.save(transaction);
 		
-		transactionProducer.sendTransactionEvent(
-				"Deposit Successful: " + 
-						savedTransaction.getToAccountNumber() + 
-						" Amount: " + savedTransaction.getAmount()
-				);
+		TransactionEvent event = new TransactionEvent();
+		event.setTransactionType(TransactionType.DEPOSIT.name());
+		event.setFromAccount(null);
+		event.setToAccount(savedTransaction.getToAccountNumber());
+		event.setAmount(savedTransaction.getAmount());
+		event.setSenderEmail(null);
+		event.setReceiverEmail(account.getEmail());
+		
+		transactionProducer.sendTransactionEvent(event);
+		
+		
+//		transactionProducer.sendTransactionEvent(
+//				"Deposit Successful: " + 
+//						savedTransaction.getToAccountNumber() + 
+//						" Amount: " + savedTransaction.getAmount()
+//				);
 		return savedTransaction;
 	}
 
@@ -108,7 +119,15 @@ public class TransactionServiceImpl implements TransactionService{
 //				);
 		
 		TransactionEvent event = new TransactionEvent();
-		event.
+		event.setTransactionType(TransactionType.WITHDRAW.name());
+		event.setFromAccount(savedTransaction.getFromAccountNumber());
+		event.setAmount(savedTransaction.getAmount());
+		event.setToAccount(savedTransaction.getToAccountNumber());
+		event.setSenderEmail(account.getEmail());
+		event.setReceiverEmail(null);
+		
+		transactionProducer.sendTransactionEvent(event);
+		
 		
 		return savedTransaction;
 	}
@@ -161,11 +180,21 @@ public class TransactionServiceImpl implements TransactionService{
 		
 		Transaction savedTransaction = transactionRepository.save(transaction);
 		
-		transactionProducer.sendTransactionEvent(
-				"Transfer Successful: " + 
-						savedTransaction.getFromAccountNumber() + " -> " + savedTransaction.getToAccountNumber() + 
-						" Amount: " + savedTransaction.getAmount()
-				);
+//		transactionProducer.sendTransactionEvent(
+//				"Transfer Successful: " + 
+//						savedTransaction.getFromAccountNumber() + " -> " + savedTransaction.getToAccountNumber() + 
+//						" Amount: " + savedTransaction.getAmount()
+//				);
+		
+		TransactionEvent event = new TransactionEvent();
+		event.setTransactionType(TransactionType.TRANSFER.name());
+		event.setFromAccount(savedTransaction.getFromAccountNumber());
+		event.setToAccount(savedTransaction.getToAccountNumber());
+		event.setAmount(savedTransaction.getAmount());
+		event.setSenderEmail(sender.getEmail());
+		event.setReceiverEmail(receiver.getEmail());
+		
+		transactionProducer.sendTransactionEvent(event);
 		
 		return savedTransaction;
 	}

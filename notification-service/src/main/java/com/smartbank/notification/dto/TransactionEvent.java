@@ -1,6 +1,7 @@
-package com.smartbank.transaction.dto;
+package com.smartbank.notification.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class TransactionEvent {
 	private String receiverEmail;
 	
 	public TransactionEvent() {
-		
+
 	}
 	
 	public TransactionEvent(String transactionType, String fromAccount, String toAccount, BigDecimal amount,
@@ -32,42 +33,53 @@ public class TransactionEvent {
 		this.senderEmail = senderEmail;
 		this.receiverEmail = receiverEmail;
 	}
+	
 	public String getTransactionType() {
 		return transactionType;
 	}
+
 	public void setTransactionType(String transactionType) {
 		this.transactionType = transactionType;
 	}
+
 	public String getFromAccount() {
 		return fromAccount;
 	}
+
 	public void setFromAccount(String fromAccount) {
 		this.fromAccount = fromAccount;
 	}
+
 	public String getToAccount() {
 		return toAccount;
 	}
+
 	public void setToAccount(String toAccount) {
 		this.toAccount = toAccount;
 	}
+
 	public BigDecimal getAmount() {
 		return amount;
 	}
+
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
+
 	public String getSenderEmail() {
 		return senderEmail;
 	}
+
 	public void setSenderEmail(String senderEmail) {
 		this.senderEmail = senderEmail;
 	}
+
 	public String getReceiverEmail() {
 		return receiverEmail;
 	}
+
 	public void setReceiverEmail(String receiverEmail) {
 		this.receiverEmail = receiverEmail;
 	}
 
-	
 }

@@ -17,6 +17,7 @@ public class TransactionProducer {
 	}
 	
 	public void sendTransactionEvent(TransactionEvent event) {
-		kafkaTemplate.send("transaction-events", event);
+		String key = event.getFromAccount() != null ? event.getFromAccount() : event.getToAccount();
+		kafkaTemplate.send("transaction-events", key, event);
 	}
 }

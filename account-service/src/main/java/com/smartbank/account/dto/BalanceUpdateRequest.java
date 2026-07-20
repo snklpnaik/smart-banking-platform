@@ -12,7 +12,7 @@ public class BalanceUpdateRequest {
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
-	public BigDecimal getAmount() {
+	public BigDecimal getBalance() {
 		return amount;
 	}
 	public void setAmount(BigDecimal amount) {

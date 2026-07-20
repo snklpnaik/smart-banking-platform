@@ -45,13 +45,13 @@ public class AccountController {
 	}
 	
 	@PutMapping("/debit")
-	public ResponseEntity<Account> debitAccount(@RequestBody BalanceUpdateRequest request){
+	public ResponseEntity<Account> debitAccount(@RequestBody UpdateBalanceRequest request){
 		
 		return ResponseEntity.ok(accountService.debitAccount(request));
 	}
 	
 	@PutMapping("/credit")
-	public ResponseEntity<Account> creditAccount(@RequestBody BalanceUpdateRequest request){
+	public ResponseEntity<Account> creditAccount(@RequestBody UpdateBalanceRequest request){
 		
 		return ResponseEntity.ok(accountService.creditAccount(request));
 	}
