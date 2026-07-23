@@ -20,6 +20,8 @@ import com.smartbank.transaction.kafka.TransactionProducer;
 import com.smartbank.transaction.repository.TransactionRepository;
 import com.smartbank.transaction.service.TransactionService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @Service
 public class TransactionServiceImpl implements TransactionService{
 	private final TransactionRepository transactionRepository;
@@ -33,6 +35,7 @@ public class TransactionServiceImpl implements TransactionService{
 	}
 
 	@Override
+	@CircuitBreaker(name="accountService", fallbackMethod="depositFallback")
 	public Transaction deposit(DepositRequest request) {
 		
 		AccountResponse account = accountClient.getAccountByNumber(request.getAccountNumber());
@@ -78,6 +81,7 @@ public class TransactionServiceImpl implements TransactionService{
 	}
 
 	@Override
+	@CircuitBreaker(name="accountService", fallbackMethod="withdrawFallback")
 	public Transaction withdraw(WithdrawRequest request) {
 		
 		AccountResponse account = accountClient.getAccountByNumber(request.getAccountNumber());
@@ -133,6 +137,7 @@ public class TransactionServiceImpl implements TransactionService{
 	}
 
 	@Override
+	@CircuitBreaker(name="accountService", fallbackMethod="transferFallback")
 	public Transaction transfer(Long userId, TransferRequest request) {
 		// TODO Auto-generated method stub
 		
@@ -184,7 +189,7 @@ public class TransactionServiceImpl implements TransactionService{
 //				"Transfer Successful: " + 
 //						savedTransaction.getFromAccountNumber() + " -> " + savedTransaction.getToAccountNumber() + 
 //						" Amount: " + savedTransaction.getAmount()
-//				);
+//				);754247
 		
 		TransactionEvent event = new TransactionEvent();
 		event.setTransactionType(TransactionType.TRANSFER.name());
@@ -203,5 +208,20 @@ public class TransactionServiceImpl implements TransactionService{
 	public List<Transaction> getTransactionHistory(String accountNumber) {
 
 		return transactionRepository.findByFromAccountNumberOrToAccountNumber(accountNumber, accountNumber);
+	}
+	
+	public Transaction depositFallback(DepositRequest request, Exception ex) {
+		System.out.println("Circuit Breaker Activated: " + ex.getMessage());
+		throw new RuntimeException("Account Service is temporarily unavailable. Please try again later");
+	}
+	
+	public Transaction withdrawFallback(WithdrawRequest request, Exception ex) {
+		System.out.println("Circuit Breaker Activated: " + ex.getMessage());
+		throw new RuntimeException("Account Service is temporarily unavailable. Please try again later");
+	}
+	
+	public Transaction transferFallback(TransferRequest request, Exception ex) {
+		System.out.println("Circuit Breaker Activated: " + ex.getMessage());
+		throw new RuntimeException("Account Service is temporarily unavailable. Please try again later");
 	}
 }
