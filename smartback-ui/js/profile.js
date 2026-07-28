@@ -1,50 +1,39 @@
-async function loadProfile() {
+async function loadProfilePage() {
 
     checkAuthentication();
 
     try {
 
-        // Change endpoint according to your Account Service
-        const response = await get("/account/profile");
+        // Ensure latest profile data
+        await loadProfile();
 
-        if (!response.ok) {
-            alert("Unable to load profile.");
-            return;
-        }
+        document.getElementById("userName").innerHTML =
+            sessionStorage.getItem("userName");
 
-        const profile = await response.json();
+        document.getElementById("email").innerHTML =
+            sessionStorage.getItem("email");
 
-        document.getElementById("customerId").innerText =
-            profile.customerId ?? "-";
+        document.getElementById("role").innerHTML =
+            getRole();
 
-        document.getElementById("name").innerText =
-            profile.name ?? "-";
+        document.getElementById("accountNumber").innerHTML =
+            sessionStorage.getItem("accountNumber");
 
-        document.getElementById("username").innerText =
-            profile.username ?? "-";
+        document.getElementById("accountType").innerHTML =
+            sessionStorage.getItem("accountType");
 
-        document.getElementById("email").innerText =
-            profile.email ?? "-";
+        document.getElementById("balance").innerHTML =
+            "₹ " + parseFloat(sessionStorage.getItem("balance")).toFixed(2);
 
-        document.getElementById("phone").innerText =
-            profile.phone ?? "-";
+        document.getElementById("status").innerHTML =
+            sessionStorage.getItem("status");
 
-        document.getElementById("accountNumber").innerText =
-            profile.accountNumber ?? "-";
-
-        document.getElementById("accountType").innerText =
-            profile.accountType ?? "-";
-
-        document.getElementById("balance").innerText =
-            "₹ " + (profile.balance ?? "0.00");
-
-        document.getElementById("status").innerText =
-            profile.status ?? "ACTIVE";
-
-    } catch (e) {
+    }
+    catch (e) {
 
         console.error(e);
-        alert("Server unavailable.");
+
+        alert("Unable to load profile.");
 
     }
 

@@ -37,8 +37,10 @@ public class TransactionServiceImpl implements TransactionService{
 	@Override
 	@CircuitBreaker(name="accountService", fallbackMethod="depositFallback")
 	public Transaction deposit(DepositRequest request) {
-		
+		System.out.println("deposit method in trans service");
 		AccountResponse account = accountClient.getAccountByNumber(request.getAccountNumber());
+		
+		System.out.println("Fetch account details from account service");
 		if(account==null) {
 
 			return null;

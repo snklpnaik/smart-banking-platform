@@ -1,5 +1,6 @@
 package com.smartbank.account.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -11,7 +12,9 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name="accounts")
-public class Account {
+public class Account implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	public static Builder builder() {
 		return new Builder();

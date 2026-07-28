@@ -2,45 +2,68 @@ async function loadDashboard() {
 
     checkAuthentication();
 
-    const username = localStorage.getItem("username");
-    const role = localStorage.getItem("role");
-
-    if (username) {
-        document.getElementById("username").innerText = username;
-    }
-
-    if (role === "ADMIN") {
-        document.getElementById("adminBtn").style.display = "inline-block";
-    }
-
     try {
 
-        // Update this endpoint according to your backend
-        const response = await get("/account/dashboard");
+        // Get user details
+        await loadProfile();
+
+        document.getElementById("welcomeText").innerHTML =
+            "Welcome, " + sessionStorage.getItem("userName");
+
+        document.getElementById("email").innerHTML =
+            sessionStorage.getItem("email");
+
+        // Show Admin button if user is ADMIN
+        if (isAdmin()) {
+            document.getElementById("adminButton").style.display = "inline-block";
+        }
+
+        // Get logged in user's ID from JWT
+        const userId = getUserId();
+
+        // Get user's account(s)
+        const response = await get(API.GET_USER_ACCOUNTS + "/" + userId);
 
         if (!response.ok) {
-            alert("Unable to load dashboard.");
+            alert("Unable to load account details.");
             return;
         }
 
-        const data = await response.json();
+        const accounts = await response.json();
 
-        document.getElementById("balance").innerText =
-            data.balance;
+        if (accounts.length === 0) {
+            alert("No account found.");
+            return;
+        }
 
-        document.getElementById("accountNumber").innerText =
-            data.accountNumber;
+        // Taking first account
+        const account = accounts[0];
 
-        document.getElementById("accountType").innerText =
-            data.accountType;
+        // Save for other pages
+        sessionStorage.setItem("accountNumber", account.accountNumber);
+        sessionStorage.setItem("accountType", account.accountType);
+        sessionStorage.setItem("balance", account.balance);
+        sessionStorage.setItem("status", account.status);
 
-        document.getElementById("accountStatus").innerText =
-            data.status;
+        // Display
+        document.getElementById("accountNumber").innerHTML =
+            account.accountNumber;
 
-    } catch (error) {
+        document.getElementById("accountType").innerHTML =
+            account.accountType;
 
-        console.error(error);
-        alert("Server unavailable.");
+        document.getElementById("balance").innerHTML =
+            "₹ " + account.balance;
+
+        document.getElementById("status").innerHTML =
+            account.status;
+
+    }
+    catch (e) {
+
+        console.error(e);
+
+        alert("Unable to connect to server.");
 
     }
 

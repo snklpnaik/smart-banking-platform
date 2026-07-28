@@ -2,19 +2,28 @@ async function loadTransactions() {
 
     checkAuthentication();
 
-    const table = document.getElementById("transactionTable");
+    const accountNumber =
+        sessionStorage.getItem("accountNumber");
+
+    const table =
+        document.getElementById("transactionTable");
 
     table.innerHTML = "";
 
     try {
 
-        // Change endpoint according to your Transaction Service
-        const response = await get("/transaction/history");
+        const response =
+            await get(API.TRANSACTIONS + "/" + accountNumber);
 
         if (!response.ok) {
 
-            table.innerHTML =
-                "<tr><td colspan='5'>Unable to load transactions.</td></tr>";
+            table.innerHTML = `
+                <tr>
+                    <td colspan="6">
+                        Unable to load transactions.
+                    </td>
+                </tr>
+            `;
 
             return;
 
@@ -24,8 +33,13 @@ async function loadTransactions() {
 
         if (transactions.length === 0) {
 
-            table.innerHTML =
-                "<tr><td colspan='5'>No transactions found.</td></tr>";
+            table.innerHTML = `
+                <tr>
+                    <td colspan="6">
+                        No Transactions Found
+                    </td>
+                </tr>
+            `;
 
             return;
 
@@ -34,23 +48,39 @@ async function loadTransactions() {
         transactions.forEach(transaction => {
 
             table.innerHTML += `
+
                 <tr>
-                    <td>${transaction.transactionId}</td>
+
+                    <td>${transaction.fromAccountNumber}</td>
+
+                    <td>${transaction.toAccountNumber}</td>
+
                     <td>${transaction.transactionType}</td>
+
                     <td>₹ ${transaction.amount}</td>
-                    <td>${transaction.transactionDate}</td>
-                    <td>${transaction.status}</td>
+
+                    <td>${transaction.transactionStatus}</td>
+
+                    <td>${transaction.createdAt}</td>
+
                 </tr>
+
             `;
 
         });
 
-    } catch (e) {
+    }
+    catch (e) {
 
         console.error(e);
 
-        table.innerHTML =
-            "<tr><td colspan='5'>Server unavailable.</td></tr>";
+        table.innerHTML = `
+            <tr>
+                <td colspan="6">
+                    Server unavailable.
+                </td>
+            </tr>
+        `;
 
     }
 

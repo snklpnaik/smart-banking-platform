@@ -2,32 +2,78 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Bank - Dashboard</title>
+
+    <title>Dashboard | Smart Bank</title>
 
     <link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body onload="loadDashboard()">
 
 <div class="navbar">
+
     <h2>🏦 Smart Bank</h2>
 
     <button onclick="logout()">Logout</button>
+
 </div>
 
 <div class="container">
 
+    <!-- Account Summary -->
+
     <div class="balance-card">
-        <h2>Welcome, <span id="username">User</span></h2>
 
-        <p>Available Balance</p>
+        <h2 id="welcomeText">
+            Welcome
+        </h2>
 
-        <div class="balance">
-            ₹ <span id="balance">0.00</span>
+        <p id="email">
+            -
+        </p>
+
+        <br>
+
+        <h3>Available Balance</h3>
+
+        <div class="balance" id="balance">
+            ₹0.00
         </div>
+
     </div>
+
+    <!-- Account Details -->
+
+    <div class="card">
+
+        <h2>Account Details</h2>
+
+        <table>
+
+            <tr>
+                <th>Account Number</th>
+                <td id="accountNumber">-</td>
+            </tr>
+
+            <tr>
+                <th>Account Type</th>
+                <td id="accountType">-</td>
+            </tr>
+
+            <tr>
+                <th>Status</th>
+                <td id="status">-</td>
+            </tr>
+
+        </table>
+
+    </div>
+
+    <!-- Actions -->
 
     <div class="menu">
 
@@ -52,43 +98,22 @@
         </button>
 
         <button
-            id="adminBtn"
-            style="display:none"
-            onclick="location.href='admin.html'">
+                id="adminButton"
+                style="display:none"
+                onclick="location.href='admin.html'">
+
             Admin
+
         </button>
-
-    </div>
-
-    <div class="card">
-
-        <h3>Quick Account Summary</h3>
-
-        <table>
-
-            <tr>
-                <th>Account Number</th>
-                <td id="accountNumber">-</td>
-            </tr>
-
-            <tr>
-                <th>Account Type</th>
-                <td id="accountType">-</td>
-            </tr>
-
-            <tr>
-                <th>Status</th>
-                <td id="accountStatus">ACTIVE</td>
-            </tr>
-
-        </table>
 
     </div>
 
 </div>
 
 <div class="footer">
+
     © 2026 Smart Bank
+
 </div>
 
 <script src="js/api.js"></script>

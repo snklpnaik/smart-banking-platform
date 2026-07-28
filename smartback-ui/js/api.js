@@ -1,14 +1,25 @@
 const BASE_URL = "http://localhost:8086";
 
 const API = {
+
+    // Auth Service
     LOGIN: "/auth/login",
-    DASHBOARD: "/account/dashboard",
-    DEPOSIT: "/account/deposit",
-    WITHDRAW: "/account/withdraw",
-    TRANSFER: "/transaction/transfer",
-    HISTORY: "/transaction/history",
-    PROFILE: "/account/profile",
-    ACCOUNTS: "/account/all"
+    REGISTER: "/auth/register",
+    PROFILE: "/auth/profile",
+
+    // Account Service
+    CREATE_ACCOUNT: "/accounts",
+    GET_ACCOUNT: "/account",
+    GET_USER_ACCOUNTS: "/accounts/user",
+    CREDIT: "/accounts/credit",
+    DEBIT: "/accounts/debit",
+    UPDATE_BALANCE: "/accounts/balance",
+
+    // Transaction Service
+    DEPOSIT: "/transactions/deposit",
+    WITHDRAW: "/transactions/withdraw",
+    TRANSFER: "/transactions/transfer",
+    TRANSACTIONS: "/transactions"
 };
 
 function getToken() {
@@ -16,46 +27,54 @@ function getToken() {
 }
 
 function getHeaders() {
-    return {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + getToken()
+
+    const headers = {
+        "Content-Type": "application/json"
     };
+
+    const token = getToken();
+
+    if (token) {
+        headers["Authorization"] = "Bearer " + token;
+    }
+
+    return headers;
 }
 
 async function get(endpoint) {
-    const response = await fetch(BASE_URL + endpoint, {
+
+    return await fetch(BASE_URL + endpoint, {
         method: "GET",
         headers: getHeaders()
     });
 
-    return response;
 }
 
-async function post(endpoint, data) {
-    const response = await fetch(BASE_URL + endpoint, {
+async function post(endpoint, body) {
+
+    return await fetch(BASE_URL + endpoint, {
         method: "POST",
         headers: getHeaders(),
-        body: JSON.stringify(data)
+        body: JSON.stringify(body)
     });
 
-    return response;
 }
 
-async function put(endpoint, data) {
-    const response = await fetch(BASE_URL + endpoint, {
+async function put(endpoint, body) {
+
+    return await fetch(BASE_URL + endpoint, {
         method: "PUT",
         headers: getHeaders(),
-        body: JSON.stringify(data)
+        body: JSON.stringify(body)
     });
 
-    return response;
 }
 
 async function remove(endpoint) {
-    const response = await fetch(BASE_URL + endpoint, {
+
+    return await fetch(BASE_URL + endpoint, {
         method: "DELETE",
         headers: getHeaders()
     });
 
-    return response;
 }

@@ -1,6 +1,20 @@
+function loadWithdrawPage() {
+
+    checkAuthentication();
+
+    document.getElementById("accountNumber").innerHTML =
+        sessionStorage.getItem("accountNumber");
+
+    document.getElementById("accountType").innerHTML =
+        sessionStorage.getItem("accountType");
+
+    document.getElementById("balance").innerHTML =
+        "₹ " + sessionStorage.getItem("balance");
+
+}
+
 async function withdrawMoney() {
 
-    const accountNumber = document.getElementById("accountNumber").value.trim();
     const amount = document.getElementById("amount").value.trim();
 
     const success = document.getElementById("success");
@@ -9,40 +23,67 @@ async function withdrawMoney() {
     success.innerHTML = "";
     error.innerHTML = "";
 
-    if (accountNumber === "" || amount === "") {
-        error.innerHTML = "Please fill all fields.";
+    if (amount === "") {
+
+        error.innerHTML = "Please enter amount.";
         return;
+
     }
 
     if (parseFloat(amount) <= 0) {
+
         error.innerHTML = "Amount should be greater than zero.";
         return;
+
+    }
+
+    const currentBalance =
+        parseFloat(sessionStorage.getItem("balance"));
+
+    if (parseFloat(amount) > currentBalance) {
+
+        error.innerHTML = "Insufficient balance.";
+        return;
+
     }
 
     try {
 
-        // Change endpoint according to your Account Service
-        const response = await post("/account/withdraw", {
-            accountNumber: accountNumber,
+        const request = {
+
+            accountNumber: sessionStorage.getItem("accountNumber"),
             amount: parseFloat(amount)
-        });
 
-        if (response.ok) {
+        };
 
-            success.innerHTML = "Amount withdrawn successfully.";
+        const response = await post(API.WITHDRAW, request);
 
-            document.getElementById("amount").value = "";
-
-        } else {
+        if (!response.ok) {
 
             const message = await response.text();
+
             error.innerHTML = message || "Withdrawal failed.";
+
+            return;
 
         }
 
-    } catch (e) {
+        success.innerHTML = "Amount withdrawn successfully.";
+
+        const newBalance = currentBalance - parseFloat(amount);
+
+        sessionStorage.setItem("balance", newBalance);
+
+        document.getElementById("balance").innerHTML =
+            "₹ " + newBalance.toFixed(2);
+
+        document.getElementById("amount").value = "";
+
+    }
+    catch (e) {
 
         console.error(e);
+
         error.innerHTML = "Unable to connect to server.";
 
     }

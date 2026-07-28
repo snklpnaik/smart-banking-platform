@@ -2,11 +2,14 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transaction History</title>
+
+    <title>Transaction History | Smart Bank</title>
 
     <link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body onload="loadTransactions()">
@@ -32,11 +35,19 @@
             <thead>
 
             <tr>
-                <th>Transaction ID</th>
+
+                <th>From Account</th>
+
+                <th>To Account</th>
+
                 <th>Type</th>
+
                 <th>Amount</th>
-                <th>Date</th>
+
                 <th>Status</th>
+
+                <th>Date</th>
+
             </tr>
 
             </thead>
@@ -48,9 +59,11 @@
         </table>
 
         <button
-            class="back-btn"
-            onclick="location.href='dashboard.html'">
+                class="back-btn"
+                onclick="location.href='dashboard.html'">
+
             Back
+
         </button>
 
     </div>
@@ -58,7 +71,9 @@
 </div>
 
 <div class="footer">
+
     © 2026 Smart Bank
+
 </div>
 
 <script src="js/api.js"></script>

@@ -1,6 +1,20 @@
+function loadDepositPage() {
+
+    checkAuthentication();
+
+    document.getElementById("accountNumber").innerHTML =
+        sessionStorage.getItem("accountNumber");
+
+    document.getElementById("accountType").innerHTML =
+        sessionStorage.getItem("accountType");
+
+    document.getElementById("balance").innerHTML =
+        "₹ " + sessionStorage.getItem("balance");
+
+}
+
 async function depositMoney() {
 
-    const accountNumber = document.getElementById("accountNumber").value.trim();
     const amount = document.getElementById("amount").value.trim();
 
     const success = document.getElementById("success");
@@ -9,40 +23,62 @@ async function depositMoney() {
     success.innerHTML = "";
     error.innerHTML = "";
 
-    if (accountNumber === "" || amount === "") {
-        error.innerHTML = "Please fill all fields.";
+    if (amount === "") {
+
+        error.innerHTML = "Please enter amount.";
         return;
+
     }
 
-    if (Number(amount) <= 0) {
-        error.innerHTML = "Amount must be greater than zero.";
+    if (parseFloat(amount) <= 0) {
+
+        error.innerHTML = "Amount should be greater than zero.";
         return;
+
     }
 
     try {
 
-        // Update endpoint according to your backend
-        const response = await post("/account/deposit", {
-            accountNumber: accountNumber,
-            amount: Number(amount)
-        });
+        const request = {
 
-        if (response.ok) {
+            accountNumber: sessionStorage.getItem("accountNumber"),
+            amount: parseFloat(amount)
 
-            success.innerHTML = "Amount deposited successfully.";
+        };
 
-            document.getElementById("amount").value = "";
+        const response = await post(API.DEPOSIT, request);
 
-        } else {
+        if (!response.ok) {
 
             const message = await response.text();
+
             error.innerHTML = message || "Deposit failed.";
+
+            return;
 
         }
 
-    } catch (e) {
+        success.innerHTML = "Amount deposited successfully.";
+
+        // Update balance in dashboard cache
+
+        const balance =
+            parseFloat(sessionStorage.getItem("balance"));
+
+        const newBalance = balance + parseFloat(amount);
+
+        sessionStorage.setItem("balance", newBalance);
+
+        document.getElementById("balance").innerHTML =
+            "₹ " + newBalance.toFixed(2);
+
+        document.getElementById("amount").value = "";
+
+    }
+    catch (e) {
 
         console.error(e);
+
         error.innerHTML = "Unable to connect to server.";
 
     }
