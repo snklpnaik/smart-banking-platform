@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +58,10 @@ public class AccountServiceImpl implements AccountService{
 	}
 
 	@Override
+	@Cacheable(value="accounts", key="#accountNumber")
 	public Account getAccountByAccountNumber(String accountNumber) {
+		
+		System.out.println("Fetching account from MySQL..."+accountNumber);
 		
 		return accountRepository.findByAccountNumber(accountNumber)
 				.orElseThrow(() -> new AccountNotFoundException("Account Not Found: " + accountNumber));
@@ -69,6 +74,7 @@ public class AccountServiceImpl implements AccountService{
 	}
 
 	@Override
+	@CachePut(value="accounts", key="#request.accountNumber")
 	public Account updateBalance(UpdateBalanceRequest request) {
 		
 		Account account = accountRepository.findByAccountNumber(
@@ -89,6 +95,7 @@ public class AccountServiceImpl implements AccountService{
 	}
 
 	@Override
+	@CachePut(value="accounts", key="#request.accountNumber")
 	public Account debitAccount(UpdateBalanceRequest request) {
 		
 		Account account = accountRepository.findByAccountNumber(request.getAccountNumber())
@@ -106,6 +113,7 @@ public class AccountServiceImpl implements AccountService{
 	}
 
 	@Override
+	@CachePut(value="accounts", key="#request.accountNumber")
 	public Account creditAccount(UpdateBalanceRequest request) {
 		
 		Account account = accountRepository.findByAccountNumber(request.getAccountNumber())

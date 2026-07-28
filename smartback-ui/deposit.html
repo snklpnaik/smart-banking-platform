@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit Money</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body onload="checkAuthentication()">
+
+<div class="navbar">
+
+    <h2>🏦 Smart Bank</h2>
+
+    <button onclick="location.href='dashboard.html'">
+        Dashboard
+    </button>
+
+</div>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>Deposit Money</h2>
+
+        <label>Account Number</label>
+
+        <input
+            type="text"
+            id="accountNumber"
+            placeholder="Enter Account Number">
+
+        <label>Amount</label>
+
+        <input
+            type="number"
+            id="amount"
+            placeholder="Enter Amount">
+
+        <button onclick="depositMoney()">
+            Deposit
+        </button>
+
+        <button
+            class="back-btn"
+            onclick="location.href='dashboard.html'">
+            Back
+        </button>
+
+        <p class="success" id="success"></p>
+
+        <p class="error" id="error"></p>
+
+    </div>
+
+</div>
+
+<div class="footer">
+    © 2026 Smart Bank
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/deposit.js"></script>
+
+</body>
+
+</html>

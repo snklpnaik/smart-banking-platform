@@ -1,8 +1,18 @@
 package com.smartbank.account.config;
 
-import org.springframework.data.redis.core.RedisHash;
+import java.time.Duration;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 
+@Configuration
 public class RedisConfig {
 	
+	@Bean
+	public RedisCacheConfiguration cacheConfiguration() {
+		return RedisCacheConfiguration.defaultCacheConfig()
+				.entryTtl(Duration.ofMinutes(10))
+				.disableCachingNullValues();
+	}
 }
