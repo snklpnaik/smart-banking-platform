@@ -1,4 +1,4 @@
-package com.smartbank.eureka_server;
+package com.smartbank.eureka;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
