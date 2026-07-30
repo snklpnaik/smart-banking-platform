@@ -28,6 +28,15 @@ eureka:
     service-url:
       defaultZone: http://eureka-server:8761/eureka/
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
 loggin:
  level:
   org.springframework.cloud.gateway: TRACE
