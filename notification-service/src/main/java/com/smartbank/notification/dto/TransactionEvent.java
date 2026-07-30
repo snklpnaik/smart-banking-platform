@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class TransactionEvent {
 	private String transactionType;
 	private String fromAccount;

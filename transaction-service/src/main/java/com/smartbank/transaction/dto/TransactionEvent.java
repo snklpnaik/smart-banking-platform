@@ -19,19 +19,19 @@ public class TransactionEvent {
 	private String senderEmail;
 	private String receiverEmail;
 	
-	public TransactionEvent() {
-		
-	}
-	
-	public TransactionEvent(String transactionType, String fromAccount, String toAccount, BigDecimal amount,
-			String senderEmail, String receiverEmail) {
-		this.transactionType = transactionType;
-		this.fromAccount = fromAccount;
-		this.toAccount = toAccount;
-		this.amount = amount;
-		this.senderEmail = senderEmail;
-		this.receiverEmail = receiverEmail;
-	}
+//	public TransactionEvent() {
+//		
+//	}
+//	
+//	public TransactionEvent(String transactionType, String fromAccount, String toAccount, BigDecimal amount,
+//			String senderEmail, String receiverEmail) {
+//		this.transactionType = transactionType;
+//		this.fromAccount = fromAccount;
+//		this.toAccount = toAccount;
+//		this.amount = amount;
+//		this.senderEmail = senderEmail;
+//		this.receiverEmail = receiverEmail;
+//	}
 	public String getTransactionType() {
 		return transactionType;
 	}

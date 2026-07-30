@@ -8,10 +8,10 @@ import com.smartbank.transaction.dto.TransactionEvent;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class TransactionProducer {
 	private final KafkaTemplate<String, TransactionEvent> kafkaTemplate;
-	
+
 	public TransactionProducer(KafkaTemplate<String, TransactionEvent> kafkaTemplate) {
 		this.kafkaTemplate=kafkaTemplate;
 	}

@@ -1,4 +1,4 @@
-package com.example.notification;
+package com.smartbank.notification;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
