@@ -1,0 +1,8 @@
+blueocean
+docker-workflow
+pipeline-stage-view
+git
+github
+credentials
+configuration-as-code
+job-dsl
