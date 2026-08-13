@@ -41,5 +41,5 @@ services:
       - smartbank-network
 networks:
   smartbank-network:
-    external: true
+    name: smartbank-network
   
