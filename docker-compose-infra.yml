@@ -27,7 +27,6 @@ services:
       - "6379:6379"
   nginx:
     build: ./nginx
-    context: ./nginx
     image: smartbank-nginx
     container_name: nginx
     ports:
