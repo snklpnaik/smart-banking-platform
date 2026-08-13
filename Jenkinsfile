@@ -3,12 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build Images') {
             steps {
                 sh 'docker compose -f docker-compose-services.yml build'
@@ -17,7 +11,7 @@ pipeline {
 
         stage('Start Infrastructure') {
             steps {
-                sh 'docker compose up -d'
+                sh 'docker compose -f docker-compose-infra.yml up -d'
             }
         }
 
