@@ -14,7 +14,7 @@ services:
       retries: 10
       start_period: 60s
     networks:
-      - smart-banking-platform_default
+      - smartbank-network
 
   api-gateway:
     build: 
@@ -34,7 +34,7 @@ services:
       eureka-server:
         condition: service_healthy
     networks:
-      - smart-banking-platform_default
+      - smartbank-network
 
   auth-service:
     build: 
@@ -49,7 +49,7 @@ services:
       api-gateway:
         condition: service_healthy
     networks:
-      - smart-banking-platform_default
+      - smartbank-network
 
   account-service:
     build: 
@@ -70,7 +70,7 @@ services:
       api-gateway:
         condition: service_healthy
     networks:
-      - smart-banking-platform_default
+      - smartbank-network
 
   transaction-service:
     build: 
@@ -93,7 +93,7 @@ services:
       account-service:
         condition: service_healthy
     networks:
-      - smart-banking-platform_default
+      - smartbank-network
 
   notification-service:
     build: 
@@ -108,8 +108,8 @@ services:
       transaction-service:
         condition: service_healthy
     networks:
-      - smart-banking-platform_default
+      - smartbank-network
 
 networks:
-  smart-banking-platform_default:
-    external: true
+  smartbank-network:
+  external: true
