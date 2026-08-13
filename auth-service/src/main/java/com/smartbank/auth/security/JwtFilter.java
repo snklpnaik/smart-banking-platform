@@ -34,6 +34,15 @@ public class JwtFilter extends OncePerRequestFilter{
 		System.out.println("JWT Filter Executed");
 		System.out.println("URI : "+ request.getRequestURI());
 		
+		if (request.getRequestURI().equals("/auth/login")
+	            && request.getMethod().equalsIgnoreCase("POST")) {
+
+	        System.out.println("Login request - skipping JWT validation");
+
+	        filterChain.doFilter(request, response);
+	        return;
+	    }
+		
 		String authHeader = request.getHeader(SecurityConstants.AUTHORIZATION_HEADER);
 		
 		if(authHeader!=null && authHeader.startsWith(SecurityConstants.TOKEN_PREFIX)) {
