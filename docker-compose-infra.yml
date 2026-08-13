@@ -39,7 +39,7 @@ services:
       - "80:80"
     networks:
       - smartbank-network
-  networks:
+networks:
   smartbank-network:
-    name: smartbank-network
+    external: true
   

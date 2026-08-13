@@ -112,4 +112,4 @@ services:
 
 networks:
   smartbank-network:
-  external: true
+    external: true
